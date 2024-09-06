@@ -31,18 +31,26 @@ def signup_post():
     return redirect(url_for('auth.login'))  
 
 
-@auth.route('/login_post',methods=['POST'])
+@auth.route('/login_post', methods=['POST'])
 def login_post():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    remember = True if request.form.get('remember') else False
-    user = User.query.filter_by(email=email).first()
-    if not user or not check_password_hash(user.password,password=password):
-        flash("Please enter correct credentials")
-        redirect(url_for('auth.login'))
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        remember = True if request.form.get('remember') else False
 
-    login_user(user,remember=remember)
+        # Fetch user from the database by email
+        user = User.query.filter_by(email=email).first()
 
+        # If user is not found or password doesn't match
+        if not user or not check_password_hash(user.password, password):
+            flash("Please enter correct credentials")
+            return redirect(url_for('auth.login'))  # Missing 'return'
+
+        # Log in the user if credentials are correct
+        login_user(user, remember=remember)
+        
+        # Redirect to the profile or desired page after login
+        return redirect(url_for('main.profile'))  # Uncomment and specify where to redirect
 
 
 
