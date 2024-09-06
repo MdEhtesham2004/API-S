@@ -31,7 +31,7 @@ def signup_post():
     return redirect(url_for('auth.login'))  
 
 
-@auth.route('/login',methods=['POST'])
+@auth.route('/login_post',methods=['POST'])
 def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
